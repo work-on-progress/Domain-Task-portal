@@ -1,0 +1,136 @@
+/* Small layer of styling that Tailwind utilities do not cover cleanly. */
+
+:root {
+  --ink: #16233b;
+  --line: #e3e6ec;
+}
+
+body { -webkit-font-smoothing: antialiased; }
+
+/* Numerals line up in columns everywhere they carry meaning. */
+.tnum, table, .stat-value { font-variant-numeric: tabular-nums; }
+
+/* ── Stat strip ─────────────────────────────────────────────── */
+.stat { padding: 18px 20px; }
+.stat-label { font-size: 12px; font-weight: 500; color: #64748b; letter-spacing: .01em; }
+.stat-value {
+  font-family: Newsreader, Georgia, serif;
+  font-size: 34px; line-height: 1.1; margin-top: 4px;
+}
+.stat-note { margin-top: 4px; font-size: 12px; color: #64748b; }
+
+/* ── Table ──────────────────────────────────────────────────── */
+thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: #fbfbfc;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 12px; font-weight: 600; color: #64748b;
+  white-space: nowrap;
+}
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: #fafbfc; }
+tbody tr.saved { animation: flash 1.1s ease-out; }
+@keyframes flash { from { background: #e6f2ef; } to { background: transparent; } }
+
+.task-chip {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  background: #eef0f4; font-size: 12px; font-weight: 500; color: #2a3a58;
+  white-space: nowrap;
+}
+.overdue { color: #a52d21; font-weight: 600; }
+.overdue::after { content: " · overdue"; font-weight: 400; font-size: 12px; }
+
+/* ── Task board ─────────────────────────────────────────────── */
+.board-card {
+  border: 1px solid var(--line); border-radius: 10px; background: #fff;
+  padding: 16px; display: flex; flex-direction: column;
+}
+.board-card.is-mine { border-left: 3px solid #0e6e62; }
+.board-bar { height: 5px; border-radius: 3px; background: #eceef2; overflow: hidden; }
+.board-bar span { display: block; height: 100%; background: #0e6e62; }
+.board-btn {
+  display: inline-block; border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 10px; font-size: 12px; font-weight: 500; color: #16233b;
+  background: #fff; cursor: pointer; text-decoration: none;
+}
+.board-btn:hover { border-color: #16233b; }
+.board-card > div:last-child { margin-top: auto; padding-top: 12px; }
+
+/* ── Row detail ─────────────────────────────────────────────── */
+tr.detail td { background: #fafbfc; padding: 14px 16px; }
+.detail-grid { display: grid; gap: 12px 24px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.detail-field span { display: block; font-size: 11px; font-weight: 600; color: #64748b; margin-bottom: 3px; }
+.detail-field p { font-size: 13px; line-height: 1.5; margin: 0; }
+.expand-btn {
+  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line);
+  background: #fff; color: #64748b; font-size: 15px; line-height: 1; cursor: pointer;
+}
+.expand-btn:hover { border-color: #16233b; color: #16233b; }
+.more-chip {
+  border: 1px solid var(--line); border-radius: 999px; padding: 2px 7px;
+  font-size: 11px; color: #64748b; cursor: help; white-space: nowrap;
+}
+.inherit-flag {
+  margin-left: 6px; font-size: 10px; font-weight: 600; color: #8a6104;
+  background: #fdf3dd; border-radius: 3px; padding: 1px 5px; vertical-align: middle;
+}
+
+/* ── Status select styled as a chip ─────────────────────────── */
+.status-select {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 4px 26px 4px 11px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 11px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23475569' stroke-width='1.7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.status-select { max-width: 210px; text-overflow: ellipsis; }
+.status-select[data-state="done"]  { background-color: #e6f2ef; color: #0a5449; border-color: #bfdfd8; }
+.status-select[data-state="open"]  { background-color: #fdf3dd; color: #8a6104; border-color: #f0dfae; }
+.status-select[data-state="blank"] { background-color: #f1f3f6; color: #64748b; border-color: #e3e6ec; }
+.status-select:disabled { opacity: .6; cursor: progress; }
+
+.remark-input {
+  width: 100%; min-width: 140px;
+  border: 1px solid transparent; border-radius: 6px;
+  padding: 5px 8px; font: inherit; font-size: 13px;
+  background: transparent;
+}
+.remark-input:hover { border-color: var(--line); }
+.remark-input:focus { border-color: #0e6e62; background: #fff; outline: none; }
+
+/* ── Skeleton ───────────────────────────────────────────────── */
+.skeleton { background: linear-gradient(90deg, #eceef2 25%, #f5f6f8 50%, #eceef2 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Toast ──────────────────────────────────────────────────── */
+.toast {
+  pointer-events: auto;
+  max-width: 460px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #fff;
+  background: #16233b;
+  box-shadow: 0 8px 24px rgba(22, 35, 59, .22);
+}
+.toast.err { background: #a52d21; }
+
+/* ── Accessibility ──────────────────────────────────────────── */
+:focus-visible { outline: 2px solid #0e6e62; outline-offset: 2px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+@media (max-width: 640px) {
+  .stat-value { font-size: 27px; }
+  thead th, tbody td { padding: 9px 10px; }
+}
