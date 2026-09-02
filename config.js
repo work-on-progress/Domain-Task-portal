@@ -4,7 +4,7 @@
  */
 window.PORTAL_CONFIG = {
   DEMO_MODE: true,
-  API_URL: 'PASTE_YOUR_WEB_APP_URL_HERE',
+  API_URL: 'https://script.google.com/macros/s/AKfycbwG2r1IcZhG7tIqbZeXE25OutmmMJ7muTDuBXNb_Q8u1QTzxOoiRIa-ODevSnoT7UTEQw/exec',
 
   // OAuth Client ID from Google Cloud Console
   GOOGLE_CLIENT_ID: 'PASTE_YOUR_CLIENT_ID_HERE.apps.googleusercontent.com',
