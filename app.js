@@ -8,6 +8,7 @@
   'use strict';
 
   var CFG = window.PORTAL_CONFIG || {};
+  var DEMO = CFG.DEMO_MODE === true;
   var STORE_KEY = 'domainPortalCredential';
 
   var state = {
@@ -79,6 +80,11 @@
   }
 
   function signOut(note) {
+    if (DEMO) {
+      loadData();
+      toast('Prototype data reset.');
+      return;
+    }
     state.credential = null;
     state.data = null;
     sessionStorage.removeItem(STORE_KEY);
@@ -111,6 +117,21 @@
   /* ─────────────────────────── network ─────────────────────────── */
 
   function api(options) {
+    if (DEMO) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (!window.PORTAL_DEMO_DATA) {
+            reject(new Error('Demo data could not be loaded.'));
+            return;
+          }
+          if (options.method === 'GET') {
+            resolve(JSON.parse(JSON.stringify(window.PORTAL_DEMO_DATA)));
+          } else {
+            resolve({ ok: true, demo: true });
+          }
+        }, options.method === 'GET' ? 250 : 120);
+      });
+    }
     if (options.method === 'GET') {
       var url = CFG.API_URL + '?token=' + encodeURIComponent(state.credential);
       if (options.tab) url += '&tab=' + encodeURIComponent(options.tab);
@@ -186,15 +207,20 @@
 
     $('page-sub').textContent = [CFG.INSTITUTION_NAME, CFG.DEPARTMENT_NAME]
       .filter(Boolean).join(' · ');
-    $('page-title').textContent = isMaster() ? 'Department overview' : 'My assigned work';
+    $('page-title').textContent = DEMO ? 'Department overview — Prototype'
+      : (isMaster() ? 'Department overview' : 'My assigned work');
     $('user-name').textContent = d.name || claims.name || d.email;
-    $('user-role').textContent = isMaster() ? 'Master access'
-      : (d.role === 'HOD' ? 'HOD view' : (d.uid ? 'Mentor UID ' + d.uid : d.email));
+    $('user-role').textContent = DEMO ? 'Prototype · Master view' : (isMaster() ? 'Master access'
+      : (d.role === 'HOD' ? 'HOD view' : (d.uid ? 'Mentor UID ' + d.uid : d.email)));
     if (d.picture || claims.picture) $('user-photo').src = d.picture || claims.picture;
 
     $('wrap-faculty').hidden = !isMaster();
     $('charts').hidden = !isMaster();
     $('stamp').textContent = new Date(d.generatedAt).toLocaleString();
+    $('demo-badge').hidden = !DEMO;
+    $('btn-refresh').textContent = DEMO ? 'Reset demo data' : 'Refresh data';
+    $('btn-signout').textContent = DEMO ? 'Reset' : 'Sign out';
+    $('source-note').textContent = DEMO ? 'Using safe prototype data' : 'Read live from the department sheet';
 
     var notes = [];
     if (d.skipped && d.skipped.length) {
@@ -712,15 +738,20 @@
   }
 
   function start() {
+    bind();
+    if (DEMO) {
+      loadData();
+      return;
+    }
     var missing = [];
     if (!CFG.API_URL || CFG.API_URL.indexOf('PASTE') === 0) missing.push('API_URL');
     if (!CFG.GOOGLE_CLIENT_ID || CFG.GOOGLE_CLIENT_ID.indexOf('PASTE') === 0) missing.push('GOOGLE_CLIENT_ID');
     if (missing.length) {
       return fail('Open config.js and set ' + missing.join(' and ') + '. Steps 3 and 5 of SETUP.md explain where each value comes from.', 'Not configured yet');
     }
-    bind();
     initGoogle();
   }
 
   document.addEventListener('DOMContentLoaded', start);
 })();
+
