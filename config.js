@@ -3,8 +3,7 @@
  * Both values come from SETUP.md, steps 3 and 5.
  */
 window.PORTAL_CONFIG = {
-  DEMO_MODE: true,
-
+  // Apps Script web app URL — ends with /exec
   API_URL: 'PASTE_YOUR_WEB_APP_URL_HERE',
 
   // OAuth Client ID from Google Cloud Console
